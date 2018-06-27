@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dear-Diary</string>
+    <string name="app_name">Dear Diary</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -13,4 +13,21 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="loading">Attempting to Sign you in</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="default_date">20/01/2018</string>
+    <string name="default_title">My Birthday</string>
+    <string name="default_description">Here is some dummy text</string>
+    <string name="profile_img_description">This is your Profile Image</string>
+
+    <!--Strings related too Adding Entry-->
+    <string name="entry_id">entry_id</string>
+    <string name="entry_title">entry_title</string>
+    <string name="entry_description">entry_description</string>
+
+    <!--Strings related to Collections-->
+    <string name="entries_collection">entries</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
