@@ -40,7 +40,7 @@ import butterknife.OnClick;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntryClickHandler {
 
 
     @BindView(R.id.fab)
@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity {
                             return;
                         }
 
-                        entries = new ArrayList<>();
+                        entries = new ArrayList<JournalEntry>();
 
                         for (DocumentSnapshot doc:queryDocumentSnapshots) {
                             JournalEntry entry = doc.toObject(JournalEntry.class);
@@ -122,7 +122,7 @@ public class MainActivity extends BaseActivity {
         FirestoreRecyclerOptions<JournalEntry> response = new FirestoreRecyclerOptions.Builder<JournalEntry>()
                 .setQuery(q,JournalEntry.class)
                 .build();
-        mAdapter = new EntriesAdapter(response);
+        mAdapter = new EntriesAdapter(response,this);
 
         mAdapter.notifyDataSetChanged();
 
@@ -167,15 +167,13 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void  addNewEntry(){
+    @Override
+    public void onEntryClick(int position) {
+        JournalEntry entry = entries.get(position);
         Intent  updateNoteIntent = new Intent(this,JournalActivity.class);
-//        updateNoteIntent.putExtra(getString(R.string.entry_id),);
-//        updateNoteIntent.putExtra(getString(R.string.entry_title),);
-//        updateNoteIntent.putExtra(getString(R.string.entry_description),);
-       startActivity(updateNoteIntent);
-//        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
+        updateNoteIntent.putExtra(getString(R.string.entry_id),entry.getId());
+        updateNoteIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
+        updateNoteIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
+        startActivity(updateNoteIntent);
     }
-
-
 }

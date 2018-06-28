@@ -38,9 +38,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater infalter = getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
 
-        infalter.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu,menu);
         return true;
     }
 

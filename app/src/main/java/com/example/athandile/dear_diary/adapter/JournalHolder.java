@@ -13,7 +13,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public  class JournalHolder extends RecyclerView.ViewHolder {
+public  class JournalHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
 
     @BindView(R.id.description_tv)
     TextView mdescriptiontView;
@@ -43,6 +43,12 @@ public  class JournalHolder extends RecyclerView.ViewHolder {
         if(entry.getTimestamp() != null){
             mdateView.setText(FORMAT.format(entry.getTimestamp()));
         }
+        itemView.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        int position = getAdapterPosition();
+        m
     }
 }

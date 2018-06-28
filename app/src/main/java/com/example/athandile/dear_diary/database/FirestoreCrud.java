@@ -1,16 +1,13 @@
 package com.example.athandile.dear_diary.database;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.example.athandile.dear_diary.R;
 import com.example.athandile.dear_diary.models.JournalEntry;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.athandile.dear_diary.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -60,20 +57,9 @@ public class FirestoreCrud implements  journalDao {
         Date timeStamp = new Date();
         JournalEntry entry = new JournalEntry(uid,title,description,timeStamp);
 
-        firestore.collection(getString(R.string.entries_collection))
-                .add(entry)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
+       return firestore.collection(getString(R.string.entries_collection))
+                .add(entry);
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
     }
 
     @Override
@@ -82,13 +68,7 @@ public class FirestoreCrud implements  journalDao {
     }
 
     @Override
-    public Task<Void> updateEntry(JournalEntry journalEntry, String id) {
-//        Intent updateNoteIntent = new Intent(mcontext, JournalActivity.class);
-//
-//        updateNoteIntent.putExtra("id",id);
-//        updateNoteIntent.putExtra("title",id);
-//        updateNoteIntent.putExtra("description",id);
-//        startActivity(updateNoteIntent);
+    public Task<Void> updateEntry( String id) {
        return firestore.collection("entries")
                 .document(id)
                 .set(journalEntry);
@@ -101,5 +81,11 @@ public class FirestoreCrud implements  journalDao {
                 .document(id)
                 .delete();
 
+    }
+
+    @Override
+    public boolean addNewUser(User user) {
+      return  firestore.collection("users")
+                .add(user).isSuccessful();
     }
 }

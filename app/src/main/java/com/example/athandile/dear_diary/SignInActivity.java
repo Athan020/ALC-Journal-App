@@ -8,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.example.athandile.dear_diary.database.FirestoreCrud;
+import com.example.athandile.dear_diary.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,11 +37,20 @@ public class SignInActivity extends BaseActivity{
     //Sign in Dependecies
     private FirebaseAuth mFirebaseAuth;
     private ProgressDialog mProgressDialog;
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirestoreCrud db;
     private static final int RC_SIGN_IN = 672;
     @BindView(R.id.sign_in_button)
-    SignInButton mSignInBtn;
+    SignInButton mGoogleSignIn;
 
-    private GoogleSignInClient mGoogleSignInClient;
+    TextView  mEmail;
+
+    TextView mPassword;
+
+    Button mSignup_btn;
+    Button mSignIn_btn;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +65,7 @@ public class SignInActivity extends BaseActivity{
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
-        mSignInBtn.setSize(SignInButton.SIZE_WIDE);
+        mGoogleSignIn.setSize(SignInButton.SIZE_WIDE);
 
     }
 
@@ -60,7 +73,7 @@ public class SignInActivity extends BaseActivity{
     protected void onStart() {
         super.onStart();
         if(getCurrentUser() != null){
-            mSignInBtn.setEnabled(false);
+            mGoogleSignIn.setEnabled(false);
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent,RC_SIGN_IN);
         }
@@ -81,10 +94,12 @@ public class SignInActivity extends BaseActivity{
 
                    Log.w("Fail Sign IN", "Google sign in failed", e);
 
-                    //updateUI(null);
+                    Snackbar.make(findViewById(R.id.sign_in_layout),"Seems To be A problem with google",Snackbar.LENGTH_SHORT)
+                            .show();
 
                 };
                 break;
+
         }
     }
 
@@ -121,15 +136,48 @@ public class SignInActivity extends BaseActivity{
 
     }
 
+    private void EmailAndPasswordAuth(){
+        showProgressDialog();
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+
+        mFirebaseAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        hideProgressDialog();
+                        if(task.isSuccessful()){
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        }
+                    }
+                });
+    }
+    private void EmailAndPasswordSignUp(){
+        showProgressDialog();
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
 
 
+        mFirebaseAuth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        hideProgressDialog();
+
+                        if(task.isSuccessful()){
+                            User user = new User(getUid(),getCurrentUser().getDisplayName(),getCurrentUser().getEmail());
+                            db.addNewUser(user);
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                        }
+                        else {
+                            Snackbar.make(findViewById(R.id.sign_in_layout),"Oops Something went wrong with the Regestration",Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                });
+    }
 
 
-//    @Override
-//    public void onClick(View v) {
-//        int id = v.getId();
-//        if(id == R.id.sign_in_button){
-//
-//        }
-//    }
 }
