@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 
 import com.example.athandile.dear_diary.adapter.EntriesAdapter;
@@ -43,9 +44,9 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntryClickHandler {
 
 
-    @BindView(R.id.fab)
-     FloatingActionButton fab;
-    @BindViews(R.id.recyclerViewEntries)
+    @BindView(R.id.fab)FloatingActionButton fab;
+
+    @BindView(R.id.recyclerViewEntries)
     RecyclerView mRecyclerView;
 
     private FirebaseAuth mAuth;
@@ -61,14 +62,25 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        db = new FirestoreCrud(this);
+        db = new FirestoreCrud();
 
-        mFirestoreListener = firestoreDb.collection(getString(R.string.entries_collection))
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),JournalActivity.class));
+            }
+        });
+        poppulateEntriesList();
+        firestoreDb = FirebaseFirestore.getInstance();
+        mFirestoreListener = firestoreDb.collection("entries")
+                .whereEqualTo("uid",getUid())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                        if( e == null) {
+                        if( e != null) {
+                            Log.e("LISTEN FAILED", "Listen failed!", e);
                             return;
                         }
 
@@ -77,12 +89,21 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
                         for (DocumentSnapshot doc:queryDocumentSnapshots) {
                             JournalEntry entry = doc.toObject(JournalEntry.class);
                             entry.setId(doc.getId());
+                            Log.d("Document",entry.getDescription());
 
                             entries.add(entry);
 
                         }
+                        if(entries.isEmpty()){
+                            mRecyclerView.setVisibility(View.INVISIBLE);
+                        }
+                        mAdapter.notifyDataSetChanged();
+
+                        mRecyclerView.setAdapter(mAdapter);
                     }
                 });
+
+
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -92,7 +113,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     @Override
     protected void onStart() {
         super.onStart();
-        mAdapter.startListening();
+       mAdapter.startListening();
     }
 
     @Override
@@ -107,15 +128,15 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
         mFirestoreListener.remove();
     }
 
-    private void popuplateEntriesList(){
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+    private void poppulateEntriesList(){
+
+
 
         //Define Query
         Query q = FirebaseFirestore.getInstance()
-                .collection(getString(R.string.entries_collection))
+                .collection("entries")
                 .whereEqualTo("uid",getUid());
 
         //Build Options For adapter
@@ -126,8 +147,14 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
 
         mAdapter.notifyDataSetChanged();
 
+        mRecyclerView =(RecyclerView)findViewById(R.id.recyclerViewEntries);
+
         mRecyclerView.setAdapter(mAdapter);
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
         mRecyclerView.addItemDecoration(decoration);
 
@@ -145,7 +172,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
                 //
                String JournalId = entries.get(position).getId();
 
-                db .deleteEntry(JournalId)
+                db.deleteEntry(JournalId)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -169,11 +196,15 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
 
     @Override
     public void onEntryClick(int position) {
-        JournalEntry entry = entries.get(position);
-        Intent  updateNoteIntent = new Intent(this,JournalActivity.class);
-        updateNoteIntent.putExtra(getString(R.string.entry_id),entry.getId());
-        updateNoteIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
-        updateNoteIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
-        startActivity(updateNoteIntent);
+        Log.d("Doc Desc",entries.get(position).getHeading());
+      JournalEntry entry = entries.get(position);
+        Snackbar.make(findViewById(R.id.main_layout),"Position: "+position,Snackbar.LENGTH_LONG)
+                .show();
+        Intent  updateEntryIntent = new Intent(this,JournalActivity.class);
+        updateEntryIntent.putExtra(getString(R.string.entry_id),entry.getId());
+        updateEntryIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
+        updateEntryIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
+        updateEntryIntent.putExtra("entry_timestamp",entry.getTimestamp());
+        startActivity(updateEntryIntent);
     }
 }

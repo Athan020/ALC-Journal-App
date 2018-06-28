@@ -39,13 +39,15 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:parentActivityName=".SignInActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".JournalActivity"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.athandile.dear_diary.SignInActivity" />
+                android:value="com.example.athandile.dear_diary.MainActivity" />
         </activity>
-        <activity android:name=".JournalActivity"></activity>
     </application>
 
 </manifest>

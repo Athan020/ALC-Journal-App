@@ -6,6 +6,7 @@ import com.example.athandile.dear_diary.models.JournalEntry;
 import com.example.athandile.dear_diary.models.User;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Date;
 import java.util.List;
 
 public interface journalDao {
@@ -16,7 +17,7 @@ public interface journalDao {
 
     JournalEntry getEntry(String id);
 
-    Task<Void> updateEntry(String id);
+    Task<Void> updateEntry(String uid, String title, String description, Date timestamp, String id);
 
     Task<Void> deleteEntry(String id);
 

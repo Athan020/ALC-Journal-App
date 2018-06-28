@@ -49,6 +49,6 @@ public  class JournalHolder extends RecyclerView.ViewHolder implements  View.OnC
     @Override
     public void onClick(View v) {
         int position = getAdapterPosition();
-        m
+
     }
 }

@@ -73,7 +73,6 @@ public class SignInActivity extends BaseActivity{
     protected void onStart() {
         super.onStart();
         if(getCurrentUser() != null){
-            mGoogleSignIn.setEnabled(false);
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent,RC_SIGN_IN);
         }

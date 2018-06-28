@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
@@ -28,11 +29,13 @@ public class FirestoreCrud implements  journalDao {
 
 
     private View mLayout;
-    public FirestoreCrud(Context context) {
-
+    public FirestoreCrud() {
         this.firestore = FirebaseFirestore.getInstance();
         this.mAuth =  FirebaseAuth.getInstance();
-        this.mcontext = context;
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        this.firestore.setFirestoreSettings(settings);
     }
 
     @Override
@@ -56,10 +59,8 @@ public class FirestoreCrud implements  journalDao {
        String uid = mAuth.getCurrentUser().getUid();
         Date timeStamp = new Date();
         JournalEntry entry = new JournalEntry(uid,title,description,timeStamp);
-
-       return firestore.collection(getString(R.string.entries_collection))
+        firestore.collection("entries")
                 .add(entry);
-
     }
 
     @Override
@@ -68,7 +69,8 @@ public class FirestoreCrud implements  journalDao {
     }
 
     @Override
-    public Task<Void> updateEntry( String id) {
+    public Task<Void> updateEntry(String uid, String title, String description,Date timestamp, String id) {
+        JournalEntry journalEntry= new JournalEntry(uid,title,description,timestamp);
        return firestore.collection("entries")
                 .document(id)
                 .set(journalEntry);
