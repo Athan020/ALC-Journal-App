@@ -39,6 +39,7 @@
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/common_border_color"
         android:padding="2dp"
         android:text="@string/btn_save"
         android:shadowColor="@color/colorPrimaryDark"

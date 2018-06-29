@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.athandile.dear_diary.adapter.EntriesAdapter;
 import com.example.athandile.dear_diary.database.FirestoreCrud;
@@ -49,6 +50,9 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     @BindView(R.id.recyclerViewEntries)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.welcome_text)
+    TextView mWelcome;
+
     private FirebaseAuth mAuth;
     private FirestoreCrud db;
     private ListenerRegistration mFirestoreListener;
@@ -71,6 +75,8 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
                 startActivity(new Intent(getApplicationContext(),JournalActivity.class));
             }
         });
+
+
         poppulateEntriesList();
         firestoreDb = FirebaseFirestore.getInstance();
         mFirestoreListener = firestoreDb.collection("entries")

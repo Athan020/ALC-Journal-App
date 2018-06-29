@@ -43,11 +43,15 @@ public class SignInActivity extends BaseActivity{
     @BindView(R.id.sign_in_button)
     SignInButton mGoogleSignIn;
 
+    @BindView(R.id.email_tv)
     TextView  mEmail;
-
+    @BindView(R.id.password_pt)
     TextView mPassword;
 
+    @BindView(R.id.siginup_btn)
     Button mSignup_btn;
+
+    @BindView(R.id.ep_signin_btn)
     Button mSignIn_btn;
 
 
@@ -73,8 +77,7 @@ public class SignInActivity extends BaseActivity{
     protected void onStart() {
         super.onStart();
         if(getCurrentUser() != null){
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent,RC_SIGN_IN);
+            startActivity(new Intent(this,MainActivity.class));
         }
     }
 
@@ -110,7 +113,7 @@ public class SignInActivity extends BaseActivity{
 
     private void GoogleAuth(GoogleSignInAccount acc){
 
-        showProgressDialog();
+        showProgressDialog(getString(R.string.loading));
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acc.getIdToken(),null);
 
@@ -135,8 +138,9 @@ public class SignInActivity extends BaseActivity{
 
     }
 
-    private void EmailAndPasswordAuth(){
-        showProgressDialog();
+  @OnClick(R.id.sign_in_button)
+    public void EmailAndPasswordAuth(View v){
+        showProgressDialog(getString(R.string.loading));
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
 
@@ -151,8 +155,9 @@ public class SignInActivity extends BaseActivity{
                     }
                 });
     }
-    private void EmailAndPasswordSignUp(){
-        showProgressDialog();
+    @OnClick(R.id.siginup_btn)
+    public void EmailAndPasswordSignUp(View v){
+        showProgressDialog(getString(R.string.sign_up));
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
 
@@ -178,5 +183,8 @@ public class SignInActivity extends BaseActivity{
                 });
     }
 
+    public static void validateForm(){
+
+    }
 
 }

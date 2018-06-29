@@ -12,10 +12,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
-    public void showProgressDialog() {
+    public void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setMessage(message);
             mProgressDialog.setIndeterminate(true);
         }
 
