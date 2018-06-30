@@ -1,78 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sign_in_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/sign_in_layout"
+    android:background="@color/background_color"
     tools:context=".SignInActivity"
     tools:layout_editor_absoluteY="81dp">
 
+    android:id="@+id/sign_in_button"
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="82dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:visibility="visible"
-        tools:visibility="gone" />
-
-
-        <EditText
-            android:id="@+id/email_tv"
-            android:layout_width="227dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:hint="@string/email"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="141dp"
-            android:ems="10"
-            android:inputType="textEmailAddress" />
-
-
-
-
-
-
-        <EditText
-            android:id="@+id/password_pt"
-            android:layout_width="226dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:hint="@string/password"
-            android:layout_marginTop="198dp"
-            android:ems="10"
-            android:inputType="textPassword" />
-
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/email_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/ep_signin_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corners"
-            android:padding="2dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/action_sign_in_short" />
-
-        <Button
-            android:id="@+id/siginup_btn"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corners"
-            android:padding="2dp"
-            android:text="@string/action_sign_up" />
-    </LinearLayout>
+        android:layout_marginTop="131dp"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-</RelativeLayout>
+    <EditText
+        android:id="@+id/password_pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="27dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/email_tv"
+        app:layout_constraintStart_toStartOf="@+id/email_tv"
+        app:layout_constraintTop_toBottomOf="@+id/email_tv" />
+
+
+    <Button
+        android:id="@+id/ep_signin_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/rounded_corners"
+        android:padding="2dp"
+        android:text="@string/action_sign_in_short"
+        app:layout_constraintBaseline_toBaselineOf="@+id/siginup_btn"
+        app:layout_constraintEnd_toStartOf="@+id/siginup_btn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/password_pt" />
+
+    <Button
+        android:id="@+id/siginup_btn"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_corners"
+        android:padding="2dp"
+        android:text="@string/action_sign_up"
+        app:layout_constraintBottom_toTopOf="@+id/signInButton"
+        app:layout_constraintEnd_toEndOf="@+id/password_pt"
+        app:layout_constraintStart_toEndOf="@+id/ep_signin_btn"
+        app:layout_constraintTop_toBottomOf="@+id/password_pt"
+        app:layout_constraintVertical_bias="0.23000002" />
+
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/signInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="169dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/siginup_btn"
+        app:layout_constraintStart_toStartOf="@+id/ep_signin_btn"
+        app:layout_constraintTop_toBottomOf="@+id/ep_signin_btn"
+        app:layout_constraintVertical_bias="0.050000012">
+
+    </com.google.android.gms.common.SignInButton>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+</android.support.constraint.ConstraintLayout>

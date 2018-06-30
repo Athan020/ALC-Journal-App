@@ -76,8 +76,10 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
             }
         });
 
+        mWelcome = (TextView)findViewById(R.id.welcome_text) ;
 
-        poppulateEntriesList();
+        mWelcome.setText("Welcome Back "+getCurrentUser().getDisplayName());
+        populateEntriesList();
         firestoreDb = FirebaseFirestore.getInstance();
         mFirestoreListener = firestoreDb.collection("entries")
                 .whereEqualTo("uid",getUid())
@@ -125,7 +127,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     @Override
     protected void onStop() {
         super.onStop();
-        mAdapter.startListening();
+        mAdapter.stopListening();
     }
 
     @Override
@@ -136,7 +138,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
 
 
 
-    private void poppulateEntriesList(){
+    private void populateEntriesList(){
 
 
 
@@ -154,15 +156,15 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
         mAdapter.notifyDataSetChanged();
 
         mRecyclerView =(RecyclerView)findViewById(R.id.recyclerViewEntries);
-
+        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
+        mRecyclerView.addItemDecoration(decoration);
         mRecyclerView.setAdapter(mAdapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
-        mRecyclerView.addItemDecoration(decoration);
+
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
