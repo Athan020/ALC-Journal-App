@@ -1,6 +1,11 @@
 # ALC-Journal-App
 A simple easy to use diary entry like app that allows users to create update and delete 
-notes that they have created
+notes that they have created.
+
+## App apk:
+```
+https://github.com/Athan020/ALC-Journal-App/blob/master/app-debug.apk
+```
 ## Deployment
 1. Make sure that Your android sdk is at its latest version along with
   -Android support repository
