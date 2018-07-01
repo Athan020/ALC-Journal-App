@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Dear-Diary</string>
+    <string name="app_name">Dear Diary</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -13,4 +13,39 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="default_date">20/01/2018</string>
+    <string name="default_title">My Birthday</string>
+    <string name="default_description">Here is some dummy text</string>
+    <string name="profile_img_description">This is your Profile Image</string>
+
+    <!--Strings related too Adding Entry-->
+    <string name="entry_id">entry_id</string>
+    <string name="entry_title">entry_title</string>
+    <string name="entry_description">entry_description</string>
+    <string name="entry_timestamp">entry_timestamp</string>
+
+    <!--Strings related to Collections-->
+    <string name="entries_collection">entries</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Strings related too JournalActivity-->
+    <string name="title_hint">Enter Title</string>
+    <string name="description_hint">Enter description</string>
+    <string name="btn_save">Save</string>
+
+    <string name="sign_up">Creating your account</string>
+    <string name="loading">Attempting to Sign you in</string>
+    <string name="deleting_entry">Deleting your entry</string>
+    <string name="updating_entry">Updating Your Entry</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="title_activity_main2">MainActivity2</string>
+
+    <string name="update_button_text">Update</string>
+    <string name="sign_out">Sign Out</string>
+
 </resources>
