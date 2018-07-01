@@ -47,4 +47,12 @@
 
     <string name="update_button_text">Update</string>
 
+    <!--Preference Related Strings-->
+    <string name="pref_filter_key">filter-key</string>
+    <string name="pref_date_filter_label">Date</string>
+    <string name="pref_title_filter_label">Title</string>
+    <string name="pref_date_filter_value">timestamp</string>
+    <string name="pref_title_filter_value">title</string>
+
+
 </resources>
