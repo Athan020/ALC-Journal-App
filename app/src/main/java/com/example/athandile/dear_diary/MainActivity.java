@@ -203,6 +203,8 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
         viewDataIntent.putExtra(getString(R.string.entry_id),entry.getId());
         viewDataIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
         viewDataIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
+        viewDataIntent.putExtra(getString(R.string.entry_timestamp),entry.getTimestamp());
+
 
         startActivity(viewDataIntent);
     }
