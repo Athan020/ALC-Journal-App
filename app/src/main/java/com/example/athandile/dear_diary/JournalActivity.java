@@ -12,7 +12,7 @@ import com.example.athandile.dear_diary.database.FirestoreCRUD;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.sql.Date;
+import java.util.Date;
 
 import butterknife.BindView;
 
