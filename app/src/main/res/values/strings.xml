@@ -46,5 +46,6 @@
     <string name="title_activity_main2">MainActivity2</string>
 
     <string name="update_button_text">Update</string>
+    <string name="sign_out">Sign Out</string>
 
 </resources>

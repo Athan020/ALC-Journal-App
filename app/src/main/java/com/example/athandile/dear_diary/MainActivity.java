@@ -64,6 +64,9 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(getCurrentUser().getDisplayName()!= null){
+            getSupportActionBar().setTitle("Hi " + getCurrentUser().getDisplayName());
+        }
         db = new FirestoreCRUD();
         detail = new DetailViewFragment();
         fab =(FloatingActionButton) findViewById(R.id.fab);
@@ -159,7 +162,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,  ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -172,29 +175,20 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
                 int position  =  viewHolder.getAdapterPosition();
 
                final String JournalId = entries.get(position).getId();
+                db.deleteEntry(JournalId)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Snackbar.make(findViewById(R.id.main_layout),"Entry Deleted",Snackbar.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Snackbar.make(findViewById(R.id.main_layout),"Error Deleting Entry",Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
 
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Delete Entry")
-                        .setMessage("Do you really want to whatever?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                db.deleteEntry(JournalId)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Snackbar.make(findViewById(R.id.main_layout),"Entry Deleted",Snackbar.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Snackbar.make(findViewById(R.id.main_layout),"Error Deleting Entry",Snackbar.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }})
-                        .setNegativeButton(android.R.string.no, null).show();
 
             }
         }).attachToRecyclerView(mRecyclerView);
@@ -204,7 +198,7 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     public void onEntryClick(int position) {
         JournalEntry entry = entries.get(position);
 
-        Intent viewDataIntent = new Intent(this,JournalEntry.class);
+        Intent viewDataIntent = new Intent(this,JournalActivity.class);
 
         viewDataIntent.putExtra(getString(R.string.entry_id),entry.getId());
         viewDataIntent.putExtra(getString(R.string.entry_title),entry.getHeading());

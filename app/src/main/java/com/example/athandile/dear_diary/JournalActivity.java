@@ -57,6 +57,7 @@ public class JournalActivity extends BaseActivity {
             }
         });
 
+
     }
 
 
@@ -79,6 +80,7 @@ public class JournalActivity extends BaseActivity {
             }else {
                 db.addNewEntry(title,description);
             }
+            finish();
         }
     }
 }

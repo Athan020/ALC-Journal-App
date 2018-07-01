@@ -12,8 +12,10 @@ public class SplashScreen extends BaseActivity {
 
             if(getCurrentUser()!=null){
                 startActivity(new Intent(this,MainActivity.class));
+                finish();
             }else {
                 startActivity(new Intent(this,SignInActivity.class));
+                finish();
             }
     }
 }
