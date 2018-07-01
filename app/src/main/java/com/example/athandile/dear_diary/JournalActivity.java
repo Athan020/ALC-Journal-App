@@ -47,7 +47,7 @@ public class JournalActivity extends BaseActivity {
         mSave_btn.setText(getString(R.string.update_button_text));
            mEditTitle.setText(bundle.getString(getString(R.string.entry_title)));
            mEditDescription.setText(bundle.getString(getString(R.string.entry_description)));
-           mnoteDate =(Date) bundle.get("entry_date");
+           mnoteDate =(Date) bundle.get(getString(R.string.entry_timestamp));
         }
 
         mSave_btn.setOnClickListener(new View.OnClickListener() {
