@@ -29,6 +29,13 @@ public  class JournalHolder extends RecyclerView.ViewHolder implements  View.OnC
     private static final SimpleDateFormat FORMAT  = new SimpleDateFormat(
             "MM/dd/yyyy", Locale.getDefault());
 
+    public String trimDescription(String description){
+        String content =  description;
+        if(content.length()> 50){
+            content = content.substring(0,50) + "...";
+        }
+        return content;
+    }
     public JournalHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
@@ -37,7 +44,7 @@ public  class JournalHolder extends RecyclerView.ViewHolder implements  View.OnC
 
     public void bind(JournalEntry entry){
 
-        mdescriptiontView.setText(entry.getDescription());
+        mdescriptiontView.setText(trimDescription(entry.getDescription()));
         mtitleView.setText(entry.getHeading());
 
         if(entry.getTimestamp() != null){

@@ -89,15 +89,23 @@ public class EntriesAdapter extends FirestoreRecyclerAdapter<JournalEntry,Journa
             ButterKnife.bind(this,itemView);
 
         }
+        public String trimDescription(String description){
+            String content =  description;
+            if(content.length()> 50){
+                content = content.substring(0,50) + "...";
+            }
+            return content;
+        }
 
         public void bind(JournalEntry entry){
 
-            mdescriptiontView.setText(entry.getDescription());
+            mdescriptiontView.setText(trimDescription(entry.getDescription()));
             mtitleView.setText(entry.getHeading());
 
             if(entry.getTimestamp() != null){
                 mdateView.setText(FORMAT.format(entry.getTimestamp()));
             }
+
             itemView.setOnClickListener(this);
         }
 
@@ -106,6 +114,7 @@ public class EntriesAdapter extends FirestoreRecyclerAdapter<JournalEntry,Journa
         public void onClick(View v) {
             int position = getAdapterPosition();
             mHandler.onEntryClick(position);
+
         }
     }
 }

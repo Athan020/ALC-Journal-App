@@ -52,6 +52,10 @@ public class BaseActivity extends AppCompatActivity {
             startActivity(new Intent());
             return true;
         }
+        if(id == R.id.action_log_out){
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 }
