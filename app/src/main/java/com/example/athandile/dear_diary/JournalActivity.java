@@ -2,23 +2,19 @@ package com.example.athandile.dear_diary;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.athandile.dear_diary.database.FirestoreCrud;
-import com.example.athandile.dear_diary.models.JournalEntry;
+import com.example.athandile.dear_diary.database.FirestoreCRUD;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.sql.Date;
 
 import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.OnClick;
 
 public class JournalActivity extends BaseActivity {
 
@@ -33,7 +29,7 @@ public class JournalActivity extends BaseActivity {
 
      private Date mnoteDate;
 
-     private FirestoreCrud db;
+     private FirestoreCRUD db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +40,11 @@ public class JournalActivity extends BaseActivity {
         mEditTitle = (EditText)findViewById(R.id.edit_title);
         mEditDescription= (EditText)findViewById(R.id.edit_description);
         mSave_btn = (Button)findViewById(R.id.save_btn);
-           db = new FirestoreCrud();
+           db = new FirestoreCRUD();
 
         if(bundle != null){
            id = bundle.getString(getString(R.string.entry_id));
-
+        mSave_btn.setText(getString(R.string.update_button_text));
            mEditTitle.setText(bundle.getString(getString(R.string.entry_title)));
            mEditDescription.setText(bundle.getString(getString(R.string.entry_description)));
            mnoteDate =(Date) bundle.get("entry_date");
@@ -74,8 +70,8 @@ public class JournalActivity extends BaseActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-
-                           // Snackbar.make(findViewById())
+                            Snackbar.make(findViewById(R.id.journal_layout),"Entry updated",Snackbar.LENGTH_SHORT)
+                                    .show();
                         }
 
                     }

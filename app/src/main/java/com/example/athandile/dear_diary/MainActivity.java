@@ -1,23 +1,24 @@
 package com.example.athandile.dear_diary;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.athandile.dear_diary.adapter.EntriesAdapter;
-import com.example.athandile.dear_diary.database.FirestoreCrud;
+import com.example.athandile.dear_diary.database.FirestoreCRUD;
+import com.example.athandile.dear_diary.fragments.DetailViewFragment;
 import com.example.athandile.dear_diary.models.JournalEntry;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,8 +38,6 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.OnClick;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
@@ -50,25 +49,24 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
     @BindView(R.id.recyclerViewEntries)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.welcome_text)
-    TextView mWelcome;
+
 
     private FirebaseAuth mAuth;
-    private FirestoreCrud db;
+    private FirestoreCRUD db;
     private ListenerRegistration mFirestoreListener;
     private EntriesAdapter mAdapter;
     private FirebaseFirestore firestoreDb;
     private ArrayList<JournalEntry> entries;
+    private DetailViewFragment detail;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        db = new FirestoreCrud();
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        db = new FirestoreCRUD();
+        detail = new DetailViewFragment();
+        fab =(FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,9 +74,8 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
             }
         });
 
-        mWelcome = (TextView)findViewById(R.id.welcome_text) ;
+        ft = getSupportFragmentManager().beginTransaction();
 
-        mWelcome.setText("Welcome Back "+getCurrentUser().getDisplayName());
         populateEntriesList();
         firestoreDb = FirebaseFirestore.getInstance();
         mFirestoreListener = firestoreDb.collection("entries")
@@ -111,10 +108,6 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
                     }
                 });
 
-
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -177,42 +170,46 @@ public class MainActivity extends BaseActivity implements EntriesAdapter.OnEntry
 
                 //Get Position on The Reccler View
                 int position  =  viewHolder.getAdapterPosition();
-                //
-               String JournalId = entries.get(position).getId();
 
-                db.deleteEntry(JournalId)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Snackbar.make(findViewById(R.id.main_layout),"Entry Deleted",Snackbar.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(findViewById(R.id.main_layout),"Error Deleting Entry",Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+               final String JournalId = entries.get(position).getId();
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Delete Entry")
+                        .setMessage("Do you really want to whatever?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                db.deleteEntry(JournalId)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Snackbar.make(findViewById(R.id.main_layout),"Entry Deleted",Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Snackbar.make(findViewById(R.id.main_layout),"Error Deleting Entry",Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
             }
         }).attachToRecyclerView(mRecyclerView);
     }
 
-    private void setUpViewModel(){
-
-
-    }
-
     @Override
     public void onEntryClick(int position) {
-        Log.d("Doc Desc",entries.get(position).getHeading());
-      JournalEntry entry = entries.get(position);
-        Snackbar.make(findViewById(R.id.main_layout),"Position: "+position,Snackbar.LENGTH_LONG)
-                .show();
-        Intent  updateEntryIntent = new Intent(this,JournalActivity.class);
-        updateEntryIntent.putExtra(getString(R.string.entry_id),entry.getId());
-        updateEntryIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
-        updateEntryIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
-        updateEntryIntent.putExtra("entry_timestamp",entry.getTimestamp());
-        startActivity(updateEntryIntent);
+        JournalEntry entry = entries.get(position);
+
+        Intent viewDataIntent = new Intent(this,JournalEntry.class);
+
+        viewDataIntent.putExtra(getString(R.string.entry_id),entry.getId());
+        viewDataIntent.putExtra(getString(R.string.entry_title),entry.getHeading());
+        viewDataIntent.putExtra(getString(R.string.entry_description),entry.getDescription());
+
+        startActivity(viewDataIntent);
     }
 }

@@ -3,7 +3,6 @@ package com.example.athandile.dear_diary.database;
 import android.content.Context;
 import android.view.View;
 
-import com.example.athandile.dear_diary.R;
 import com.example.athandile.dear_diary.models.JournalEntry;
 import com.example.athandile.dear_diary.models.User;
 import com.google.android.gms.tasks.Task;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class FirestoreCrud implements  journalDao {
+public class FirestoreCRUD implements IFirestoreCRUD {
 
     private FirebaseFirestore  firestore;
     private List<JournalEntry> entries;
@@ -29,7 +28,7 @@ public class FirestoreCrud implements  journalDao {
 
 
     private View mLayout;
-    public FirestoreCrud() {
+    public FirestoreCRUD() {
         this.firestore = FirebaseFirestore.getInstance();
         this.mAuth =  FirebaseAuth.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()

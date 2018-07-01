@@ -9,7 +9,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.Date;
 import java.util.List;
 
-public interface journalDao {
+public interface IFirestoreCRUD {
 
     List<JournalEntry> getAllEntries(String uid);
 

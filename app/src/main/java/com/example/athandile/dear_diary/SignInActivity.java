@@ -4,14 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.athandile.dear_diary.database.FirestoreCrud;
+import com.example.athandile.dear_diary.database.FirestoreCRUD;
 import com.example.athandile.dear_diary.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,7 +24,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import butterknife.BindView;
@@ -38,7 +36,7 @@ public class SignInActivity extends BaseActivity{
     private FirebaseAuth mFirebaseAuth;
     private ProgressDialog mProgressDialog;
     private GoogleSignInClient mGoogleSignInClient;
-    private FirestoreCrud db;
+    private FirestoreCRUD db;
     private static final int RC_SIGN_IN = 672;
     @BindView(R.id.sign_in_button)
     SignInButton mGoogleSignIn;
@@ -48,7 +46,7 @@ public class SignInActivity extends BaseActivity{
     @BindView(R.id.password_pt)
     TextView mPassword;
 
-    @BindView(R.id.siginup_btn)
+    @BindView(R.id.signup_btn)
     Button mSignup_btn;
 
     @BindView(R.id.ep_signin_btn)
@@ -70,6 +68,7 @@ public class SignInActivity extends BaseActivity{
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
         mGoogleSignIn.setSize(SignInButton.SIZE_WIDE);
+        db = new FirestoreCRUD();
 
     }
 
@@ -138,8 +137,8 @@ public class SignInActivity extends BaseActivity{
 
     }
 
-  @OnClick(R.id.sign_in_button)
-    public void EmailAndPasswordAuth(View v){
+  @OnClick(R.id.ep_signin_btn)
+    public void EmailAndPasswordAuth(){
         showProgressDialog(getString(R.string.loading));
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
@@ -155,7 +154,7 @@ public class SignInActivity extends BaseActivity{
                     }
                 });
     }
-    @OnClick(R.id.siginup_btn)
+    @OnClick(R.id.signup_btn)
     public void EmailAndPasswordSignUp(View v){
         showProgressDialog(getString(R.string.sign_up));
         String email = mEmail.getText().toString();
@@ -170,6 +169,7 @@ public class SignInActivity extends BaseActivity{
                         hideProgressDialog();
 
                         if(task.isSuccessful()){
+                            EmailAndPasswordAuth();
                             User user = new User(getUid(),getCurrentUser().getDisplayName(),getCurrentUser().getEmail());
                             db.addNewUser(user);
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
