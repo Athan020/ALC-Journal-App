@@ -99,7 +99,7 @@ public class EntriesAdapter extends FirestoreRecyclerAdapter<JournalEntry,Journa
 
         public void bind(JournalEntry entry){
 
-            mdescriptiontView.setText(trimDescription(entry.getDescription()));
+            mdescriptiontView.setText(entry.getDescription());
             mtitleView.setText(entry.getHeading());
 
             if(entry.getTimestamp() != null){
